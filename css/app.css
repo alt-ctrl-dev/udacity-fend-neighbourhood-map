@@ -30,20 +30,32 @@ body {
     width: 100%;
 }
 
-
-/* Small devices (landscape phones, 576px and up) */
-/* All smaller devices e.g. Tablets, phones, etcs*/
+/* Generic css for all smaller devices with width upto 991px e.g. Tablets, phones, etcs*/
 @media screen and (max-width: 991px) {
     .container .options-box {
-        width: 60%;
         position: absolute;
         left: 0%;
         top: 0%;
         z-index: 1;
+        height: 100%;
     }
     .container #map {
         height: 100%;
         width: 100%;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .container .options-box {
+        width: 45%;
+    }
+}
+
+/* small devices (mobiles, 360px and up) */
+@media (min-width: 360px) and (max-width: 767px) {
+    .container .options-box {
+        width: 60%;
     }
 }
 
@@ -65,21 +77,3 @@ body {
 }
 
 
-/* Medium devices (tablets, 768px and up)
-
-@media (min-width: 768px) and (max-width: 991px) {
-    .container .options-box {
-        background: #fff;
-        border-right: 1px solid #999;
-        height: 100%;
-        width: 90%;
-        position: absolute;
-        left: 0%;
-        top: 0%;
-        z-index: 1;
-    }
-    .container #map {
-        height: 100%;
-        width: 100%;
-    }
-} */
