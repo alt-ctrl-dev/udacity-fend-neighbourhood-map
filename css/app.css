@@ -13,52 +13,91 @@ body {
 }
 
 .container .options-box {
-  background: #fff;
-  border-right: 1px solid #999;
-  height: 100%;
-  width: 30%;
+    background-color: cadetblue;
+    border-right: 1px solid #999;
+    height: 100%;
+    width: 30%;
+    transition: width 1s, height 1s;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.container .options-box .option-button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    display: none;
+    background-color: cadetblue;
+}
+.container .options-box.options-box-close .option-button {
+    width: 100%;
+    height: 100%;
 }
 
 .container #map {
     height: 100%;
-    width:70%;
+    width: 70%;
 }
 
+
 /* Generic css for all smaller devices with width upto 991px e.g. Tablets, phones, etcs*/
-@media screen and (max-width: 991px) {
+
+@media screen and (max-width: 767px) {
     .container .options-box {
         position: absolute;
         left: 0%;
         top: 0%;
         z-index: 1;
-        height: 100%;
     }
     .container #map {
         height: 100%;
         width: 100%;
     }
-}
-
-/* Medium devices (tablets, 768px and up) */
-@media (min-width: 768px) and (max-width: 991px) {
-    .container .options-box {
-        width: 45%;
+    .container .options-box.options-box-close .option-button {
+        display: block;
+    }
+    .container .options-box .option-button {
+        display: block;
+        width: 75px;
+        height: 75px;
     }
 }
 
+
+/* Medium devices (tablets, 768px and up) */
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .container .options-box {
+        width: 30%;
+    }
+}
+
+
 /* small devices (mobiles, 360px and up) */
+
 @media (min-width: 360px) and (max-width: 767px) {
     .container .options-box {
         width: 60%;
     }
-}
-
-/* All smaller devices that are too small*/
-@media screen and (max-width: 359px) {
-    .container .options-box  {
-        width: 100%;
-        height: 10%;
+    .container .options-box.options-box-close {
+        width: 110px;
+        height: 70px;
     }
 }
 
 
+/* All smaller devices that are too small*/
+
+@media screen and (max-width: 359px) {
+    .container .options-box {
+        width: 100%;
+        height: 100%;
+    }
+    .container .options-box.options-box-close {
+        width: 110px;
+        height: 70px;
+        background-color: #5f9ea057
+    }
+}
