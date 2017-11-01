@@ -12,7 +12,7 @@
     <body>
         <div class="container">
             <section class="options-box options-box-close">
-                <button class="option-button"><i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i></button>
+                <button class="option-button"  data-bind="click: togglePanel"><i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i></button>
                 <div class="search-box">
                     <input class="search-text" type="text" />
                 </div>
@@ -21,6 +21,7 @@
         </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/2.2.0/knockout-min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="js/app.js"></script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&key=AIzaSyATHbNqzbLFsSmNbtrbxTQRV5gGRU9fcoE&v=3&callback=initMap"></script>
     </body>
