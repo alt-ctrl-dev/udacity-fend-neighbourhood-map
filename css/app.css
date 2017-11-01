@@ -1,0 +1,85 @@
+html,
+body {
+    font-family: Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    height: 100%;
+    position: relative;
+    display: flex;
+}
+
+.container .options-box {
+  background: #fff;
+  border-right: 1px solid #999;
+  height: 100%;
+  width: 30%;
+}
+
+.container #map {
+    height: 100%;
+    width:70%;
+}
+
+.no-show{
+    display: none;
+    height: 100%;
+    width: 100%;
+}
+
+
+/* Small devices (landscape phones, 576px and up) */
+/* All smaller devices e.g. Tablets, phones, etcs*/
+@media screen and (max-width: 991px) {
+    .container .options-box {
+        width: 60%;
+        position: absolute;
+        left: 0%;
+        top: 0%;
+        z-index: 1;
+    }
+    .container #map {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+/* All smaller devices that are too small*/
+@media screen and (max-width: 359px) {
+    .container {
+        display: none
+    }
+    .no-show {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+    }
+    .no-show h1{
+        text-align: center;
+        text-transform: uppercase;
+        align-self: center;
+    }
+}
+
+
+/* Medium devices (tablets, 768px and up)
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .container .options-box {
+        background: #fff;
+        border-right: 1px solid #999;
+        height: 100%;
+        width: 90%;
+        position: absolute;
+        left: 0%;
+        top: 0%;
+        z-index: 1;
+    }
+    .container #map {
+        height: 100%;
+        width: 100%;
+    }
+} */
