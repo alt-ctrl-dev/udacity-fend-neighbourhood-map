@@ -147,7 +147,7 @@ function AppViewModel() {
   let self = this;
   this.weatherPanelOpen = ko.observable(false);
   this.searchPanelOpen = ko.observable(false);
-  this.weather = ko.observable("Weather is XXX degrees");
+  this.weather = ko.observable("");
   this.toggleSearchPanel = function () {
     self.searchPanelOpen(!self.searchPanelOpen());
     self.weatherPanelOpen(false);
@@ -155,6 +155,17 @@ function AppViewModel() {
   this.toggleWeatherPanel = function () {
     self.weatherPanelOpen(!self.weatherPanelOpen());
     self.searchPanelOpen(false);
+    $(".loading").show();
+    $.get("https://api.apixu.com/v1/current.json?key=16966ad7efa74c9894723957173107&q=Melbourne")
+      .done(function(data) {
+        self.weather(`Current weather: ${data.current.condition.text} | Current Temperature: ${data.current.temp_c}°C`);
+      })
+      .fail(function(error) {
+        self.weather(`Could not get weather conditions`);
+      })
+      .always(function() {
+        $(".loading").hide();
+      });
   };
 }
 
