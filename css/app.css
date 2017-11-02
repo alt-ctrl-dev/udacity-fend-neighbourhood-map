@@ -20,7 +20,7 @@ body {
     border-right: 1px solid #999;
     height: 100%;
     width: 30%;
-    transition: width 1s, height 1s, transform 1s;
+    transition: width 1s, height 1s, transform 1s, display 1s;
     display: flex;
     justify-content: center;
     align-content: center;
@@ -44,16 +44,82 @@ body {
 }
 
 .container .options-box .search-box {
-    height: 50px;
+    height: 100%;
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    flex-direction: column;
 }
 
 .container .options-box .search-box .search-text {
     height: 25px;
     width: 90%;
+    margin:10px 0;
+}
+.container .options-box .search-box .list
+{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.container .options-box .search-box .list li
+{
+    padding: 10px;
+}
+
+.container .weather-box {
+    background-color: rgb(70, 132, 133);
+    height: 50px;
+    width: 70%;
+    z-index: 2;
+    transition: width 1s, transform 1s, font-size 2s;
+    display: flex;
+    justify-content: flex-start;
+    align-content: center;
+    position: absolute;
+    top: 0;
+    right: 0
+}
+
+.container .weather-box.weather-box-close{
+    width: 50px;
+}
+
+.container .weather-box img {
+    /* background-color: rgb(70, 132, 133); */
+    height: 50px;
+    width: 50px;
+}
+
+.container .weather-box p {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    align-self: center;
+    transition: font-size 2s;
+}
+
+.container .weather-box.weather-box-close p{
+    display: none;
+    font-size: 0px;
+}
+
+.container .weather-box .loading {
+    width: 25%;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    align-self: center;
+    transition: font-size 2s;
+}
+
+.container .weather-box.weather-box-close .loading{
+    display: none;
+    font-size: 0px;
 }
 
 .container #map {
@@ -87,6 +153,10 @@ body {
     }
     .container .options-box.options-box-close .search-box {
         display: none
+    }
+
+    .container .weather-box {
+        width: 100%;
     }
 }
 

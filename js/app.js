@@ -145,10 +145,17 @@ function populateInfoWindow(marker, infowindow) {
 
 function AppViewModel() {
   let self = this;
-  this.panelOpen = ko.observable(false);
-  this.togglePanel = function () {
-    self.panelOpen(!self.panelOpen());
-  }
+  this.weatherPanelOpen = ko.observable(false);
+  this.searchPanelOpen = ko.observable(false);
+  this.weather = ko.observable("Weather is XXX degrees");
+  this.toggleSearchPanel = function () {
+    self.searchPanelOpen(!self.searchPanelOpen());
+    self.weatherPanelOpen(false);
+  };
+  this.toggleWeatherPanel = function () {
+    self.weatherPanelOpen(!self.weatherPanelOpen());
+    self.searchPanelOpen(false);
+  };
 }
 
 // Activates knockout.js

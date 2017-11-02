@@ -10,14 +10,31 @@
     </head>
 
     <body>
+
         <div class="container">
-            <section class="options-box" data-bind="css: { 'options-box-close': panelOpen()==false }">
-                <button class="option-button" data-bind="click: togglePanel"><i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i></button>
+            <section class="options-box" data-bind="css: { 'options-box-close': searchPanelOpen()==false }">
+                <button class="option-button" data-bind="click: toggleSearchPanel"><i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i></button>
                 <div class="search-box">
                     <input class="search-text" type="text" />
+                    <ul class="list">
+                        <li>A</li>
+                        <li>A</li>
+                        <li>A</li>
+                        <li>A</li>
+                        <li>A</li>
+                    </ul>
                 </div>
+
             </section>
+
             <div id="map"></div>
+            <section class="weather-box" data-bind="css: { 'weather-box-close': weatherPanelOpen()==false }">
+                    <img src="/img/apixu.png" class="option-button"  data-bind="click: toggleWeatherPanel"/>
+                    <div class="loading">
+                        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                    </div>
+                    <p class="weather" data-bind="text: weather"></p>
+            </section>
         </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/2.2.0/knockout-min.js"></script>
