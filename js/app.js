@@ -144,8 +144,10 @@ function populateInfoWindow(marker, infowindow) {
 }
 
 function AppViewModel() {
+  let self = this;
+  this.panelOpen = ko.observable(false);
   this.togglePanel = function () {
-    $("section,.options-box").toggleClass("options-box-close");
+    self.panelOpen(!self.panelOpen());
   }
 }
 
