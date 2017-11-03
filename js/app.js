@@ -182,6 +182,10 @@ function AppViewModel() {
     map.fitBounds(bounds);
   };
 
+  this.showMarkerLocation = function(marker){
+    marker.holder.setAnimation(google.maps.Animation.DROP);
+  };
+
   this.stringContains = function (string, contains) {
     string = string || "";
     return string.toLowerCase().includes(contains.toLowerCase());
@@ -192,7 +196,10 @@ function AppViewModel() {
     var retArr = ko.utils.arrayFilter(locations, function (item) {
       return self.stringContains(item.title.toLowerCase(), search);
     });
-    debugger;
+    // var index = locations.findIndex((item)=>{
+    //   return item.title === retArr.title;
+    // });
+    // debugger;
     return retArr;
   }, this);
 

@@ -17,7 +17,7 @@
                 <div class="search-box">
                     <input class="search-text" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off" />
                     <ul class="list" data-bind="foreach: markers">
-                        <li data-bind="text: title"></li>
+                        <li data-bind="text: title, click: $root.showMarkerLocation"></li>
                     </ul>
                 </div>
 
