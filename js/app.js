@@ -35,8 +35,6 @@ let locations = [{
   }
 ];
 let map;
-// Create a new blank array for all the listing markers.
-let markers = [];
 
 function initMap() {
   // Constructor creates a new map - only center and zoom are required.
@@ -60,55 +58,7 @@ function initMap() {
     mapTypeControl: false
   });
 
-
-  // Style the markers a bit. This will be our listing marker icon.
-  var defaultIcon = makeMarkerIcon('0091ff');
-
-  // Create a "highlighted location" marker color for when the user
-  // mouses over the marker.
-  var highlightedIcon = makeMarkerIcon('FFFF24');
-
-  var selectedIcon = makeMarkerIcon('9191ff');
-
-  var largeInfowindow = new google.maps.InfoWindow();
-
-  // The following group uses the location array to create an array of markers on initialize.
-  for (var i = 0; i < locations.length; i++) {
-    // Get the position from the location array.
-    var position = locations[i].location;
-    var title = locations[i].title;
-    // Create a marker per location, and put into markers array.
-    var marker = new google.maps.Marker({
-      position: position,
-      title: title,
-      animation: google.maps.Animation.DROP,
-      icon: defaultIcon,
-      id: i
-    });
-    // Push the marker to our array of markers.
-    markers.push(marker);
-    // Create an onclick event to open the large infowindow at each marker.
-    marker.addListener('click', function() {
-      this.setIcon(selectedIcon);
-      populateInfoWindow(this, largeInfowindow);
-    });
-    // Two event listeners - one for mouseover, one for mouseout,
-    // to change the colors back and forth.
-    marker.addListener('mouseover', function() {
-      this.setIcon(highlightedIcon);
-    });
-    marker.addListener('mouseout', function() {
-      this.setIcon(defaultIcon);
-    });
-  }
-
-  var bounds = new google.maps.LatLngBounds();
-  // Extend the boundaries of the map for each marker and display the marker
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(map);
-    bounds.extend(markers[i].position);
-  }
-  map.fitBounds(bounds);
+  viewModel.mapReady();
 }
 
 // This function takes in a COLOR, and then creates a new marker
@@ -143,8 +93,22 @@ function populateInfoWindow(marker, infowindow) {
   }
 }
 
+function showMarker(index) {
+  if(index<0){
+    locations.forEach((location)=>{
+      locations[i].holdMarker.setMap(map);
+    });
+  }
+  locations.forEach((location)=>{
+    locations[i].holdMarker.setMap(null);
+  });
+
+
+}
+
 function AppViewModel() {
   let self = this;
+  this.query = ko.observable("");
   this.weatherPanelOpen = ko.observable(false);
   this.searchPanelOpen = ko.observable(false);
   this.weather = ko.observable("");
@@ -156,18 +120,85 @@ function AppViewModel() {
     self.weatherPanelOpen(!self.weatherPanelOpen());
     self.searchPanelOpen(false);
     $(".loading").show();
+    self.weather("");
     $.get("https://api.apixu.com/v1/current.json?key=16966ad7efa74c9894723957173107&q=Melbourne")
-      .done(function(data) {
-        self.weather(`Current weather: ${data.current.condition.text} | Current Temperature: ${data.current.temp_c}°C`);
+      .done(function (data) {
+        setTimeout(() => {
+          self.weather(`Current weather: ${data.current.condition.text} | Current Temperature: ${data.current.temp_c}°C`);
+        }, 500);
       })
-      .fail(function(error) {
-        self.weather(`Could not get weather conditions`);
+      .fail(function (error) {
+        setTimeout(() => {
+          self.weather(`Could not get weather conditions`);
+        }, 500);
       })
-      .always(function() {
+      .always(function () {
         $(".loading").hide();
       });
   };
+
+  this.mapReady = function () {
+    // Style the markers a bit. This will be our listing marker icon.
+    var defaultIcon = makeMarkerIcon('0091ff');
+
+    // Create a "highlighted location" marker color for when the user
+    // mouses over the marker.
+    var highlightedIcon = makeMarkerIcon('FFFF24');
+
+    var selectedIcon = makeMarkerIcon('9191ff');
+
+    var largeInfowindow = new google.maps.InfoWindow();
+    var bounds = new google.maps.LatLngBounds();
+    // The following group uses the location array to create an array of markers on initialize.
+    for (var i = 0; i < locations.length; i++) {
+      // Get the position from the location array.
+      var position = locations[i].location;
+      var title = locations[i].title;
+      // Create a marker per location, and put into markers array.
+      var marker = new google.maps.Marker({
+        position: position,
+        title: title,
+        animation: google.maps.Animation.DROP,
+        icon: defaultIcon,
+        id: "marker" + i
+      });
+
+      // Create an onclick event to open the large infowindow at each marker.
+      marker.addListener('click', function () {
+        this.setIcon(selectedIcon);
+        populateInfoWindow(this, largeInfowindow);
+      });
+      // Two event listeners - one for mouseover, one for mouseout, to change the colors back and forth.
+      marker.addListener('mouseover', function () {
+        this.setIcon(highlightedIcon);
+      });
+      marker.addListener('mouseout', function () {
+        this.setIcon(defaultIcon);
+      });
+      marker.setMap(map);
+      bounds.extend(marker.getPosition());
+      locations[i].holder = marker;
+    }
+    map.fitBounds(bounds);
+  };
+
+  this.stringContains = function (string, contains) {
+    string = string || "";
+    return string.toLowerCase().includes(contains.toLowerCase());
+  };
+
+  this.markers = ko.dependentObservable(function () {
+    var search = self.query().toLowerCase();
+    var retArr = ko.utils.arrayFilter(locations, function (item) {
+      return self.stringContains(item.title.toLowerCase(), search);
+    });
+    debugger;
+    return retArr;
+  }, this);
+
+
 }
 
+const viewModel = new AppViewModel();
 // Activates knockout.js
-ko.applyBindings(new AppViewModel());
+ko.applyBindings(viewModel);

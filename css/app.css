@@ -114,7 +114,7 @@ body {
     padding: 0;
     text-align: center;
     align-self: center;
-    transition: font-size 2s;
+    transition: font-size 2s, display 2s;
 }
 
 .container .weather-box.weather-box-close .loading{
