@@ -96,16 +96,16 @@ function populateInfoWindow(marker, infowindow) {
 function showMarker(index = -1) {
   if (index < 0) {
     locations.forEach((location, i) => {
-      if(location.holder)location.holder.setMap(map);
+      if (location.holder) location.holder.setMap(map);
     });
   } else {
-    if(locations[index].holder)locations[index].holder.setMap(map);
+    if (locations[index].holder) locations[index].holder.setMap(map);
   }
 }
 
 function hideMarker() {
   locations.forEach((location) => {
-    if(location.holder)location.holder.setMap(null);
+    if (location.holder) location.holder.setMap(null);
   });
 }
 
@@ -155,6 +155,17 @@ function AppViewModel() {
       });
   };
 
+  function findIndex(searchArray, item) {
+    var k = 0;
+    while (k < len) {
+      if (searchArray[k] === item) {
+        return k;
+      }
+      k++;
+    }
+    return -1;
+  }
+
   this.mapReady = function () {
     // Style the markers a bit. This will be our listing marker icon.
     var defaultIcon = makeMarkerIcon('0091ff');
@@ -198,22 +209,19 @@ function AppViewModel() {
 
   this.markers = ko.dependentObservable(function () {
     var search = self.query().toLowerCase();
-    var itemFound =  ko.utils.arrayFilter(locations, function (item) {
+    var itemFound = ko.utils.arrayFilter(locations, function (item) {
       return self.stringContains(item.title.toLowerCase(), search);
     });
     hideMarker();
-    if(itemFound.length>0 && itemFound.length!=locations.length){
+    if (itemFound.length > 0 && itemFound.length != locations.length) {
       for (var index = 0; index < itemFound.length; index++) {
-        var loc = itemFound[index];
-        var itemindex = locations.findIndex((item)=>{
-          return loc === item;
-        });
-        if(itemindex>=0){
+        var item = itemFound[index];
+        var itemindex = findIndex(locations, item);
+        if (itemindex >= 0) {
           showMarker(itemindex);
         }
       }
-    }
-    else{
+    } else {
       showMarker();
     }
     return itemFound;
