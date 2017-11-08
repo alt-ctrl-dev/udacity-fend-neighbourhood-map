@@ -157,7 +157,7 @@ function AppViewModel() {
 
   function findIndex(searchArray, item) {
     var k = 0;
-    while (k < len) {
+    while (k < searchArray.length) {
       if (searchArray[k] === item) {
         return k;
       }
