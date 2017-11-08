@@ -93,17 +93,35 @@ function populateInfoWindow(marker, infowindow) {
   }
 }
 
-function showMarker(index) {
-  if(index<0){
-    locations.forEach((location)=>{
-      locations[i].holdMarker.setMap(map);
+function showMarker(index = -1) {
+  if (index < 0) {
+    locations.forEach((location, i) => {
+      if(location.holder)location.holder.setMap(map);
     });
+  } else {
+    if(locations[index].holder)locations[index].holder.setMap(map);
   }
-  locations.forEach((location)=>{
-    locations[i].holdMarker.setMap(null);
+}
+
+function hideMarker() {
+  locations.forEach((location) => {
+    if(location.holder)location.holder.setMap(null);
   });
+}
 
-
+function attachMarkerListners(marker, largeInfowindow, defaultIcon, highlightedIcon, selectedIcon) {
+  // Create an onclick event to open the large infowindow at each marker.
+  marker.addListener('click', function () {
+    this.setIcon(selectedIcon);
+    populateInfoWindow(this, largeInfowindow);
+  });
+  // Two event listeners - one for mouseover, one for mouseout, to change the colors back and forth.
+  marker.addListener('mouseover', function () {
+    this.setIcon(highlightedIcon);
+  });
+  marker.addListener('mouseout', function () {
+    this.setIcon(defaultIcon);
+  });
 }
 
 function AppViewModel() {
@@ -158,23 +176,10 @@ function AppViewModel() {
       var marker = new google.maps.Marker({
         position: position,
         title: title,
-        animation: google.maps.Animation.DROP,
         icon: defaultIcon,
         id: "marker" + i
       });
-
-      // Create an onclick event to open the large infowindow at each marker.
-      marker.addListener('click', function () {
-        this.setIcon(selectedIcon);
-        populateInfoWindow(this, largeInfowindow);
-      });
-      // Two event listeners - one for mouseover, one for mouseout, to change the colors back and forth.
-      marker.addListener('mouseover', function () {
-        this.setIcon(highlightedIcon);
-      });
-      marker.addListener('mouseout', function () {
-        this.setIcon(defaultIcon);
-      });
+      attachMarkerListners(marker, largeInfowindow, defaultIcon, highlightedIcon, selectedIcon);
       marker.setMap(map);
       bounds.extend(marker.getPosition());
       locations[i].holder = marker;
@@ -182,7 +187,7 @@ function AppViewModel() {
     map.fitBounds(bounds);
   };
 
-  this.showMarkerLocation = function(marker){
+  this.showMarkerLocation = function (marker) {
     marker.holder.setAnimation(google.maps.Animation.DROP);
   };
 
@@ -193,17 +198,26 @@ function AppViewModel() {
 
   this.markers = ko.dependentObservable(function () {
     var search = self.query().toLowerCase();
-    var retArr = ko.utils.arrayFilter(locations, function (item) {
+    var itemFound =  ko.utils.arrayFilter(locations, function (item) {
       return self.stringContains(item.title.toLowerCase(), search);
     });
-    // var index = locations.findIndex((item)=>{
-    //   return item.title === retArr.title;
-    // });
-    // debugger;
-    return retArr;
+    hideMarker();
+    if(itemFound.length>0 && itemFound.length!=locations.length){
+      for (var index = 0; index < itemFound.length; index++) {
+        var loc = itemFound[index];
+        var itemindex = locations.findIndex((item)=>{
+          return loc === item;
+        });
+        if(itemindex>=0){
+          showMarker(itemindex);
+        }
+      }
+    }
+    else{
+      showMarker();
+    }
+    return itemFound;
   }, this);
-
-
 }
 
 const viewModel = new AppViewModel();
