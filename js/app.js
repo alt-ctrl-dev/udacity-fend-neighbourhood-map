@@ -56,6 +56,8 @@ function initMap() {
     },
     zoom: 15,
     zoomControl: false,
+    clickableIcons: false,
+    fullscreenControl: false,
     styles: [{
       featureType: 'poi',
       elementType: 'geometry',
