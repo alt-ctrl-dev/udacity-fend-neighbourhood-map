@@ -36,6 +36,11 @@ let locations = [{
 ];
 let map;
 
+
+/**
+* @description function to run when Google Maps has loaded
+* @function
+*/
 function initMap() {
   // Constructor creates a new map - only center and zoom are required.
   map = new google.maps.Map(document.getElementById('map'), {
@@ -62,13 +67,20 @@ function initMap() {
   viewModel.mapReady();
 }
 
+/**
+* @description This function will let the user know if there was an error loading Google Maps
+* @function
+*/
 function gm_authFailure() {
   alert("Something went wrong with maps. :(");
-
 }
-// This function takes in a COLOR, and then creates a new marker
-// icon of that color. The icon will be 21 px wide by 34 high, have an origin
-// of 0, 0 and be anchored at 10, 34).
+
+/**
+* @description This function takes in a COLOR, and then creates a new marker icon of that color. The icon will be 21 px wide by 34 high, have an origin of 0, 0 and be anchored at 10, 34).
+* @function
+* @param {string} markerColor - The color of the marker
+* @return {google.maps.MarkerImage} a marker with provided color
+*/
 function makeMarkerIcon(markerColor) {
   var markerImage = new google.maps.MarkerImage(
     'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
@@ -79,9 +91,13 @@ function makeMarkerIcon(markerColor) {
     new google.maps.Size(21, 34));
   return markerImage;
 }
-// This function populates the infowindow when the marker is clicked. We'll only allow
-// one infowindow which will open at the marker that is clicked, and populate based
-// on that markers position.
+
+/**
+* @description This function populates the infowindow when the marker is clicked.
+* @function
+* @param {google.maps.Marker} marker - The marker to which the information window must be attached
+* @param {google.maps.InfoWindow} infowindow - the information window to show when the marker is clicked
+*/
 function populateInfoWindow(marker, infowindow) {
   // Check to make sure the infowindow is not already opened on this marker.
   if (infowindow.marker != marker) {
@@ -96,16 +112,15 @@ function populateInfoWindow(marker, infowindow) {
     // Open the infowindow on the correct marker.
     infowindow.open(map, marker);
 
+    //API call to get infomation about place
     $.get("https://en.wikipedia.org/w/api.php?origin=*&format=json&action=query&prop=extracts&exintro=&explaintext=&titles=" + marker.title)
       .done(function (data) {
         infowindow.setContent('');
-        console.log(data);
         var query = data.query.pages;
         var content = "";
         for (let i in query) {
           if (query[i].extract)
             content = query[i].extract.split("\n")[0];
-          console.log(content);
         }
         infowindow.setContent(`<h2>${marker.title}</h2><div class="info">${content}</div>`);
       })
@@ -114,29 +129,48 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.setContent('<h2>' + marker.title + '</h2><div class="info info_error">Something went wrong</div>');
       })
       .always(function () {
+        //always center the map on marker click
         map.setCenter(marker.getPosition());
       });
   }
 }
 
+/**
+* @description Function to show a marker based on index. If index is -1, then it will show all the markers
+* @function
+* @param {number} index - The index of the location that will be displayed, default is -1
+*/
 function showMarker(index = -1) {
   if (index < 0) {
     locations.forEach((location, i) => {
       if (location.holder)
-      location.holder.setMap(map);
+        location.holder.setMap(map);
     });
   } else {
     if (locations[index].holder)
-    locations[index].holder.setMap(map);
+      locations[index].holder.setMap(map);
   }
 }
 
+/**
+* @description Function to hide all marker
+* @function
+*/
 function hideMarker() {
   locations.forEach((location) => {
     if (location.holder) location.holder.setMap(null);
   });
 }
 
+/**
+* @description Function to attach marker listeners
+* @function
+* @param {google.maps.Marker} marker - The marker that need the events to be registered
+* @param {google.maps.InfoWindow} largeInfowindow - the information window to show when the marker is clicked
+* @param {google.maps.MarkerImage} defaultIcon - The default image for the marker
+* @param {google.maps.MarkerImage} highlightedIcon - The highlighted image for the marker, when mouse hover occurs
+* @param {google.maps.MarkerImage} selectedIcon - The selected image for the marker, when the marker is clicked
+*/
 function attachMarkerListners(marker, largeInfowindow, defaultIcon, highlightedIcon, selectedIcon) {
   // Create an onclick event to open the large infowindow at each marker.
   marker.addListener('click', function () {
@@ -151,6 +185,36 @@ function attachMarkerListners(marker, largeInfowindow, defaultIcon, highlightedI
     this.setIcon(defaultIcon);
   });
 }
+
+/**
+* @description Function to find the index of the item in an array
+* @function
+* @param {Array} searchArray - The array to be searched
+* @param {any} item - the item to search in the array
+* @return {number} The index of the item if found, else -1;
+*/
+function findIndex(searchArray, item) {
+  var k = 0;
+  while (k < searchArray.length) {
+    if (searchArray[k] === item) {
+      return k;
+    }
+    k++;
+  }
+  return -1;
+}
+
+/**
+* @description Function to find if a string contains a specific text
+* @function
+* @param {string} string - The string to be searched
+* @param {string} contains - the substring to search in the string
+* @return {bool} The index of the item if found, else -1;
+*/
+function stringContains (string, contains) {
+  string = string || "";
+  return string.toLowerCase().includes(contains.toLowerCase());
+};
 
 function AppViewModel() {
   let self = this;
@@ -182,17 +246,6 @@ function AppViewModel() {
         $(".loading").hide();
       });
   };
-
-  function findIndex(searchArray, item) {
-    var k = 0;
-    while (k < searchArray.length) {
-      if (searchArray[k] === item) {
-        return k;
-      }
-      k++;
-    }
-    return -1;
-  }
 
   this.mapReady = function () {
     // Style the markers a bit. This will be our listing marker icon.
@@ -226,7 +279,7 @@ function AppViewModel() {
     map.fitBounds(bounds);
   };
 
-  this.recenterMap = function(){
+  this.recenterMap = function () {
     var bounds = new google.maps.LatLngBounds();
     for (var i = 0; i < locations.length; i++) {
       bounds.extend(locations[i].holder.getPosition());
@@ -247,7 +300,7 @@ function AppViewModel() {
   this.markers = ko.dependentObservable(function () {
     var search = self.query().toLowerCase();
     var itemFound = ko.utils.arrayFilter(locations, function (item) {
-      return self.stringContains(item.title.toLowerCase(), search);
+      return stringContains(item.title.toLowerCase(), search);
     });
     hideMarker();
     if (itemFound.length > 0 && itemFound.length != locations.length) {
