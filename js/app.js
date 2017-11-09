@@ -44,8 +44,6 @@ function initMap() {
       lng: 144.9633
     },
     zoom: 15,
-    scrollwheel: false,
-    disableDoubleClickZoom: false,
     zoomControl: false,
     styles: [{
       featureType: 'poi',
@@ -224,6 +222,14 @@ function AppViewModel() {
       marker.setMap(map);
       bounds.extend(marker.getPosition());
       locations[i].holder = marker;
+    }
+    map.fitBounds(bounds);
+  };
+
+  this.recenterMap = function(){
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < locations.length; i++) {
+      bounds.extend(locations[i].holder.getPosition());
     }
     map.fitBounds(bounds);
   };
