@@ -146,6 +146,25 @@ body {
     width: 100%;
 }
 
+.container .recenter{
+    background-color: rgb(70, 132, 133);
+    height: 50px;
+    width: 50px;
+    z-index: 2;
+    transition: width 1s, transform 1s, font-size 2s;
+    display: flex;
+    justify-content: flex-start;
+    align-content: center;
+    position: absolute;
+    bottom: 0;
+    right: 0
+}
+.container .recenter .center-button{
+    height: 50px;
+    width: 50px;
+    background-color: rgb(51, 93, 94);
+}
+
 
 /* Generic css for all smaller devices with width upto 991px e.g. Tablets, phones, etcs*/
 
