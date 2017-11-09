@@ -296,6 +296,7 @@ function AppViewModel() {
   this.showMarkerLocation = function (marker) {
     marker.holder.setAnimation(google.maps.Animation.DROP);
     map.setCenter(marker.holder.getPosition());
+    self.searchPanelOpen(false);
   };
 
   this.markers = ko.dependentObservable(function () {
