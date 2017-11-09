@@ -1,4 +1,10 @@
 let locations = [{
+  title:'Flinders Street railway station',
+  location: {
+    lat: -37.8182711,
+    lng: 144.9670618
+  }
+},{
     title: 'Melbourne Zoo',
     location: {
       lat: -37.7841346,
@@ -191,7 +197,7 @@ function attachMarkerListners(marker, largeInfowindow, defaultIcon, highlightedI
 * @function
 * @param {Array} searchArray - The array to be searched
 * @param {any} item - the item to search in the array
-* @return {number} The index of the item if found, else -1;
+* @return {number} The index of the item if found, else -1
 */
 function findIndex(searchArray, item) {
   var k = 0;
@@ -209,7 +215,7 @@ function findIndex(searchArray, item) {
 * @function
 * @param {string} string - The string to be searched
 * @param {string} contains - the substring to search in the string
-* @return {bool} The index of the item if found, else -1;
+* @return {bool} The index of the item if found, else -1
 */
 function stringContains (string, contains) {
   string = string || "";
