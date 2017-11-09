@@ -298,11 +298,6 @@ function AppViewModel() {
     map.setCenter(marker.holder.getPosition());
   };
 
-  this.stringContains = function (string, contains) {
-    string = string || "";
-    return string.toLowerCase().includes(contains.toLowerCase());
-  };
-
   this.markers = ko.dependentObservable(function () {
     var search = self.query().toLowerCase();
     var itemFound = ko.utils.arrayFilter(locations, function (item) {
