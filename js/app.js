@@ -44,6 +44,9 @@ function initMap() {
       lng: 144.9633
     },
     zoom: 15,
+    scrollwheel: false,
+    disableDoubleClickZoom: false,
+    zoomControl: false,
     styles: [{
       featureType: 'poi',
       elementType: 'geometry',
@@ -61,6 +64,10 @@ function initMap() {
   viewModel.mapReady();
 }
 
+function gm_authFailure() {
+  alert("Something went wrong with maps. :(");
+
+}
 // This function takes in a COLOR, and then creates a new marker
 // icon of that color. The icon will be 21 px wide by 34 high, have an origin
 // of 0, 0 and be anchored at 10, 34).
@@ -87,19 +94,42 @@ function populateInfoWindow(marker, infowindow) {
     infowindow.addListener('closeclick', function () {
       infowindow.marker = null;
     });
-    infowindow.setContent('<div>' + marker.title + '</div><div class="weather"></div>');
+    infowindow.setContent('<h2>' + marker.title + '</h2><div class="info">Getting information</div>');
     // Open the infowindow on the correct marker.
     infowindow.open(map, marker);
+
+    $.get("https://en.wikipedia.org/w/api.php?origin=*&format=json&action=query&prop=extracts&exintro=&explaintext=&titles=" + marker.title)
+      .done(function (data) {
+        infowindow.setContent('');
+        console.log(data);
+        var query = data.query.pages;
+        var content = "";
+        for (let i in query) {
+          if (query[i].extract)
+            content = query[i].extract.split("\n")[0];
+          console.log(content);
+        }
+        infowindow.setContent(`<h2>${marker.title}</h2><div class="info">${content}</div>`);
+      })
+      .fail(function (error) {
+        infowindow.setContent('');
+        infowindow.setContent('<h2>' + marker.title + '</h2><div class="info info_error">Something went wrong</div>');
+      })
+      .always(function () {
+        map.setCenter(marker.getPosition());
+      });
   }
 }
 
 function showMarker(index = -1) {
   if (index < 0) {
     locations.forEach((location, i) => {
-      if (location.holder) location.holder.setMap(map);
+      if (location.holder)
+      location.holder.setMap(map);
     });
   } else {
-    if (locations[index].holder) locations[index].holder.setMap(map);
+    if (locations[index].holder)
+    locations[index].holder.setMap(map);
   }
 }
 
@@ -200,6 +230,7 @@ function AppViewModel() {
 
   this.showMarkerLocation = function (marker) {
     marker.holder.setAnimation(google.maps.Animation.DROP);
+    map.setCenter(marker.holder.getPosition());
   };
 
   this.stringContains = function (string, contains) {
@@ -221,7 +252,7 @@ function AppViewModel() {
           showMarker(itemindex);
         }
       }
-    } else {
+    } else if (itemFound.length == locations.length) {
       showMarker();
     }
     return itemFound;
