@@ -312,7 +312,6 @@ function AppViewModel() {
         $(".loading").hide();
       });
   };
-
   this.mapReady = function () {
     // Style the markers a bit. This will be our listing marker icon.
     var defaultIcon = makeMarkerIcon('0091ff');
@@ -344,7 +343,6 @@ function AppViewModel() {
     }
     map.fitBounds(bounds);
   };
-
   this.recenterMap = function () {
     var bounds = new google.maps.LatLngBounds();
     for (var i = 0; i < locations.length; i++) {
@@ -352,11 +350,12 @@ function AppViewModel() {
     }
     map.fitBounds(bounds);
   };
-
   this.showMarkerLocation = function (marker) {
     marker.holder.setAnimation(google.maps.Animation.DROP);
     map.setCenter(marker.holder.getPosition());
     self.searchPanelOpen(false);
+    largeInfowindow.close()
+    largeInfowindow.marker = null;
   };
 
   this.markers = ko.dependentObservable(function () {
