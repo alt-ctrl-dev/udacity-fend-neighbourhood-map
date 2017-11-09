@@ -220,7 +220,7 @@ function findIndex(searchArray, item) {
 function stringContains (string, contains) {
   string = string || "";
   return string.toLowerCase().includes(contains.toLowerCase());
-};
+}
 
 function AppViewModel() {
   let self = this;
